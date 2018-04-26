@@ -12,7 +12,11 @@
 ## 中文乱码处理(问题解决)
   不管是转utf8还是gb2312都是对文件的操作！但是在mapreduce机制里，他对文件的操作是自动完成的，我们用户接触到的已经是文件中每一行的具体内容了。这个时候由于原始文件的编码问题，每一行涉及中文的已经是乱码了，此时对这个乱码不管怎么转始终是乱码。
   所以，因为我们无法在mapreduce的文件层面进行操作，那就只有对本地文件转好了，把中文问题解决了，再上传到云端了。
+  
+
 ![](https://ws4.sinaimg.cn/large/006tKfTcgy1fqq1mokzbnj3078096t8t.jpg)
+## 将export_Zh_clean上传至HDFS
+![](https://ws3.sinaimg.cn/large/006tKfTcgy1fqq272ru77j317o02edgj.jpg)
 ## Clean_Zh代码片段
 ```java
       import java.io.*;
