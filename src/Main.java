@@ -1,4 +1,6 @@
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.util.*;
 
 import org.apache.hadoop.conf.Configuration;
@@ -26,25 +28,19 @@ public class Main {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 
 
-            String value_clean = value.toString();
+            String value_clean = value.toString().trim();
+            // 删除多于空格，只保留一个空格
             value_clean = value_clean.replaceAll("\\s+", " ");
-
-
             System.out.println("去掉多于空格后的值:" + value_clean);
-
-
             if (Objects.equals(key.toString(), "0")) {
                 System.out.println("行号:" + key.toString());
                 String[] parts = value_clean.split(" ");
                 System.out.println(parts.length);
                 banName = parts[0];
-            } else if (Objects.equals(key.toString(), "1")) {
+            } else if (value_clean.equals("日期 开盘 最高 最低 收盘 成交量 成交额")) {
                 System.out.println("行号:" + key.toString());
                 // do nothing
-            } else if (Objects.equals(key.toString(), "2")) {
-                System.out.println("行号:" + key.toString());
-                // do nothing
-            } else {
+            } else if (!(value_clean.equals("数据来源:通达信") || value_clean.equals(" "))){
                 System.out.println("行号:" + key.toString());
                 String[] parts1 = value_clean.split(" ");
                 System.out.println(parts1.length);
@@ -83,7 +79,10 @@ public class Main {
                 sum1 = sum1 + value;
             }
             double shoupan_avg = sum1 / (shoupan.size());
-            String kaipan_avg_shoupan_avg = "开盘平均：" + kaipan_avg + "收盘平均:" + shoupan_avg;
+
+            // 约定小数点位数 4位
+            DecimalFormat df = new DecimalFormat("#.0000");
+            String kaipan_avg_shoupan_avg = "开盘平均-" + df.format(kaipan_avg) + "-收盘平均-" + df.format(shoupan_avg);;
             System.out.println(kaipan_avg_shoupan_avg);
             context.write(key, new Text(kaipan_avg_shoupan_avg));
         }
@@ -93,7 +92,7 @@ public class Main {
         // TODO Auto-generated method stub
         Configuration conf = new Configuration();
         conf.set("fs.default.name", "hdfs://localhost:9000");
-        String[] otherArgs = new String[]{"input/export", "output2"}; /* 直接设置输入参数 */
+        String[] otherArgs = new String[]{"input/export_Zh_clean", "output"}; /* 直接设置输入参数 */
         if (otherArgs.length != 2) {
             System.err.println("Usage: wordcount <in><out>");
             System.exit(2);
