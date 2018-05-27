@@ -1,4 +1,8 @@
 # MapReduce_BankData
+## 步骤
+1. 先运行Clean_Zh.java，在本地处理中文的问题。
+2. 使用命令行将已处理的文件传到HDFS（这一步没写在代码里，偷了个懒）
+3. 再运行Main.java
 
 ## 通达信数据原始数据
 ![](https://ws3.sinaimg.cn/large/006tKfTcgy1fqpexgouubj312o0o6qgr.jpg)
